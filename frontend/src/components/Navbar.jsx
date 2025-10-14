@@ -20,7 +20,7 @@ const Navbar = ({ cartCount, onCartClick }) => {
           onClick={() => handleScroll("home")}
           className="text-2xl font-bold text-orange-400 cursor-pointer drop-shadow-[0_2px_6px_rgba(255,165,0,0.9)]"
         >
-          🍕 Pizza By Ayesha
+          🍕 SliceHub
         </h1>
 
 

@@ -10,7 +10,7 @@ export const useCart = () => {
   // Add to cart
   const addToCart = (pizza) => {
     setCart((prev) => {
-      const existing = prev.find((item) => item.name === pizza.name);
+      const existing = prev.find((item) => item.name === pizza.name );
       if (existing) {
         return prev.map((item) =>
           item.name === pizza.name 
@@ -59,8 +59,8 @@ export const useCart = () => {
 
     try {
       const formData = new FormData();
-      formData.append('access_key', 'd9496e10-3057-4c26-9adb-cc31f74d31ba');
-      formData.append('subject', 'New Pizza Order - HomeMade Pizza');
+      formData.append('access_key', 'f16290a6-360e-4d5f-ba52-353f4a5f45ad');
+      formData.append('subject', 'SliceHub – Your Cravings, Our Pizza');
       formData.append('name', customerDetails.name);
       formData.append('phone', customerDetails.phone);
       formData.append('address', customerDetails.address);

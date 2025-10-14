@@ -10,7 +10,9 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Cart from "./components/Cart";
 import OrderSuccessPopup from "./components/OrderSuccessPopup";
+import InfoSection from "./components/InfoSection";
 import { useCart } from "./hooks/useCart";
+
 
 function App() {
   const {
@@ -38,7 +40,7 @@ function App() {
         <Navbar cartCount={cartCount} onCartClick={toggleCart} />
         <Hero />
         <Menu addToCart={addToCart} />
-
+        
         <Cart
           cart={cart}
           showCart={showCart}
@@ -50,7 +52,9 @@ function App() {
           onOrderSuccess={handleOrderSuccess} // Updated prop name
         />
 
-        <Contact />
+
+
+        <InfoSection />
         <Footer />
 
         <OrderSuccessPopup
