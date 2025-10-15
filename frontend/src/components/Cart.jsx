@@ -82,7 +82,7 @@ const Cart = ({
             cart,
             totalAmount,
             paymentData: response,
-            paymentMethod: "upi",
+            paymentMethod: "Online Payment - Paid",
           });
 
           setCustomerDetails({ name: "", address: "", phone: "", email: "" });
