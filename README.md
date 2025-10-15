@@ -7,3 +7,10 @@ Today target,
 6. Fix Razorpay Integration. 
 
 Night time Add mySQL Integration.
+
+-----------------------------------------------
+For future updates for github, you can simply do:
+
+git add .
+git commit -m "Updated UI or fixed bugs"
+git push

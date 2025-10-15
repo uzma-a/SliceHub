@@ -18,6 +18,10 @@ const Footer = () => {
           © {new Date().getFullYear()} SliceHub | All Rights Reserved
         </p>
 
+        <p className="text-sm font-semibold">
+          For any query: +888 555 999
+        </p>
+
         
       </div>
     </footer>
