@@ -42,44 +42,70 @@ const Cart = ({
 
 
   const handleUPIPayment = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const res = await loadRazorpayScript();
-    if (!res) {
-      toast.error("Failed to load Razorpay SDK. Check your connection.");
-      return;
-    }
+  const res = await loadRazorpayScript();
+  if (!res) {
+    toast.error("Failed to load Razorpay SDK. Check your connection.");
+    return;
+  }
 
-    // rest of your payment logic...
-    const orderResponse = await fetch("https://slice-hub-backend.vercel.app/create-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: totalAmount }),
-    });
+  const orderResponse = await fetch("https://slice-hub-backend.vercel.app/create-order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ amount: totalAmount }),
+  });
 
-    const orderData = await orderResponse.json();
+  const orderData = await orderResponse.json();
 
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: orderData.amount,
-      currency: "INR",
-      name: "Pizza Order App",
-      order_id: orderData.id,
-      handler: async function (response) {
-        // verify payment
-      },
-      prefill: {
-        name: customerDetails.name,
-        email: customerDetails.email,
-        contact: customerDetails.phone,
-      },
-      theme: { color: "#f97316" },
-    };
+  const options = {
+    key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+    amount: orderData.amount,
+    currency: "INR",
+    name: "Pizza Order App",
+    order_id: orderData.id,
+    handler: async function (response) {
+      try {
+        // ✅ verify payment with backend
+        const verifyRes = await fetch("https://slice-hub-backend.vercel.app/verify-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(response),
+        });
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+        const verifyData = await verifyRes.json();
+
+        if (verifyData.success) {
+          // ✅ Show success and close cart
+          onOrderSuccess({
+            customerDetails,
+            cart,
+            totalAmount,
+            paymentData: response,
+            paymentMethod: "upi",
+          });
+
+          setCustomerDetails({ name: "", address: "", phone: "", email: "" });
+          onClose();
+        } else {
+          toast.error("Payment verification failed.");
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Something went wrong while verifying payment.");
+      }
+    },
+    prefill: {
+      name: customerDetails.name,
+      email: customerDetails.email,
+      contact: customerDetails.phone,
+    },
+    theme: { color: "#f97316" },
   };
 
+  const rzp = new window.Razorpay(options);
+  rzp.open();
+};
 
 
 
