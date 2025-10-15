@@ -51,7 +51,7 @@ const Cart = ({
     }
 
     // rest of your payment logic...
-    const orderResponse = await fetch("http://localhost:5000/create-order", {
+    const orderResponse = await fetch("https://slice-hub-backend.vercel.app/create-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ amount: totalAmount }),
