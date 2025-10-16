@@ -1,16 +1,29 @@
-Today target, 
-1. Shift extra menu in menupage. ✔️
-2. Fix UI. ✔️
-3. Add photos ✔️
-4. Check it comes in cart. ✔️
-5. Change email I'd. ✔️
-6. Fix Razorpay Integration. 
+🍕 Pizza Ordering System
+A full-stack pizza ordering application with online payment integration (Razorpay) and order management system.
+✨ Features
 
-Night time Add mySQL Integration.
+🛒 Shopping Cart - Add, remove, and manage pizza orders
+💳 Online Payment - UPI/Card payments via Razorpay
+💰 Cash on Delivery - COD option available
+📱 Responsive Design - Works on mobile, tablet, and desktop
+🗄️ Order Management - All orders saved to MySQL database
+📊 Admin Dashboard - View all orders and customer details
+✅ Payment Verification - Secure payment signature verification
+🔔 Toast Notifications - Real-time feedback to users
 
------------------------------------------------
-For future updates for github, you can simply do:
+🛠️ Tech Stack
+Frontend
 
-git add .
-git commit -m "Updated UI or fixed bugs"
-git push
+React - UI library
+Vite - Build tool
+Tailwind CSS - Styling
+React Toastify - Notifications
+Razorpay Checkout - Payment gateway
+
+Backend
+
+Node.js - Runtime environment
+Express.js - Web framework
+MySQL - Database
+Razorpay SDK - Payment processing
+CORS - Cross-origin resource sharing
