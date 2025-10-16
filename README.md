@@ -1,15 +1,16 @@
 🍕 Pizza Ordering System
 A full-stack pizza ordering application with online payment integration (Razorpay) and order management system.
-✨ Features
 
-🛒 Shopping Cart - Add, remove, and manage pizza orders
-💳 Online Payment - UPI/Card payments via Razorpay
-💰 Cash on Delivery - COD option available
-📱 Responsive Design - Works on mobile, tablet, and desktop
-🗄️ Order Management - All orders saved to MySQL database
-📊 Admin Dashboard - View all orders and customer details
-✅ Payment Verification - Secure payment signature verification
-🔔 Toast Notifications - Real-time feedback to users
+✨ Features: 
+
+1. 🛒 Shopping Cart - Add, remove, and manage pizza orders
+2. 💳 Online Payment - UPI/Card payments via Razorpay
+3. 💰 Cash on Delivery - COD option available
+4. 📱 Responsive Design - Works on mobile, tablet, and desktop
+5. 🗄️ Order Management - All orders saved to MySQL database
+6. 📊 Admin Dashboard - View all orders and customer details
+7. ✅ Payment Verification - Secure payment signature verification
+8. 🔔 Toast Notifications - Real-time feedback to users
 
 🛠️ Tech Stack
 Frontend
