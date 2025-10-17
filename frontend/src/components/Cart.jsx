@@ -97,7 +97,7 @@ const Cart = ({
                 orderId,
               });
 
-              toast.success(`Order placed successfully! Order ID: ${orderId}`);
+              // toast.success(`Order placed successfully! Order ID: ${orderId}`);
               setCustomerDetails({ name: "", address: "", phone: "", email: "" });
               onClose();
             } else {
