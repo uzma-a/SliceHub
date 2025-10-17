@@ -38,6 +38,41 @@ const Cart = ({
     });
   };
 
+  // ✅ Save order to MySQL database
+  const saveOrderToDatabase = async (orderData) => {
+    try {
+      const response = await fetch("http://localhost:5000/save-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
+
+      // Check if response is ok
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Server returned non-JSON response");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        // toast.success(`Order placed successfully! Order ID: ${result.orderId}`);
+        return result.orderId;
+      } else {
+        toast.error(result.message || "Failed to save order to database");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error saving order:", error);
+      toast.error(`Error: ${error.message}`);
+      return null;
+    }
+  };
+
   const handleUPIPayment = async (e) => {
     e.preventDefault();
 
@@ -58,7 +93,7 @@ const Cart = ({
         return;
       }
 
-      const orderResponse = await fetch("https://slice-hub-backend.vercel.app/create-order", {
+      const orderResponse = await fetch("http://localhost:5000/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: totalAmount }),
@@ -75,7 +110,7 @@ const Cart = ({
         handler: async function (response) {
           try {
             // ✅ Verify payment with backend
-            const verifyRes = await fetch("https://slice-hub-backend.vercel.app/verify-payment", {
+            const verifyRes = await fetch("http://localhost:5000/verify-payment", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(response),
@@ -84,22 +119,29 @@ const Cart = ({
             const verifyData = await verifyRes.json();
 
             if (verifyData.success) {
-              // Generate local order ID
-              const orderId = `ORD_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-              // ✅ Show success and close cart
-              onOrderSuccess({
+              // ✅ Save order to MySQL database
+              const orderId = await saveOrderToDatabase({
                 customerDetails,
                 cart,
                 totalAmount,
                 paymentData: response,
-                paymentMethod: "Online Payment - Paid",
-                orderId,
+                paymentMethod: "online",
               });
 
-              // toast.success(`Order placed successfully! Order ID: ${orderId}`);
-              setCustomerDetails({ name: "", address: "", phone: "", email: "" });
-              onClose();
+              if (orderId) {
+                // ✅ Show success and close cart
+                onOrderSuccess({
+                  customerDetails,
+                  cart,
+                  totalAmount,
+                  paymentData: response,
+                  paymentMethod: "Online Payment - Paid",
+                  orderId,
+                });
+
+                setCustomerDetails({ name: "", address: "", phone: "", email: "" });
+                onClose();
+              }
             } else {
               toast.error("Payment verification failed.");
             }
@@ -145,21 +187,28 @@ const Cart = ({
     setIsProcessing(true);
 
     try {
-      // Generate local order ID
-      const orderId = `ORD_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-      onOrderSuccess({
+      // ✅ Save COD order to MySQL database
+      const orderId = await saveOrderToDatabase({
         customerDetails,
         cart,
         totalAmount,
         paymentData: null,
-        paymentMethod: 'Cash on Delivery',
-        orderId,
+        paymentMethod: 'cod',
       });
 
-      toast.success(`Order placed successfully! Order ID: ${orderId}`);
-      setCustomerDetails({ name: '', address: '', phone: '', email: '' });
-      onClose();
+      if (orderId) {
+        onOrderSuccess({
+          customerDetails,
+          cart,
+          totalAmount,
+          paymentData: null,
+          paymentMethod: 'Cash on Delivery',
+          orderId,
+        });
+
+        setCustomerDetails({ name: '', address: '', phone: '', email: '' });
+        onClose();
+      }
     } catch (error) {
       console.error("COD order error:", error);
       toast.error("Error placing order");
