@@ -41,7 +41,7 @@ const Cart = ({
   // ✅ Save order to MySQL database
   const saveOrderToDatabase = async (orderData) => {
     try {
-      const response = await fetch("http://localhost:5000/save-order", {
+      const response = await fetch("https://slicehub-nsef.onrender.com/save-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData),
@@ -93,7 +93,7 @@ const Cart = ({
         return;
       }
 
-      const orderResponse = await fetch("http://localhost:5000/create-order", {
+      const orderResponse = await fetch("https://slicehub-nsef.onrender.com/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: totalAmount }),
@@ -110,7 +110,7 @@ const Cart = ({
         handler: async function (response) {
           try {
             // ✅ Verify payment with backend
-            const verifyRes = await fetch("http://localhost:5000/verify-payment", {
+            const verifyRes = await fetch("https://slicehub-nsef.onrender.com/verify-payment", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(response),
