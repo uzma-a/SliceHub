@@ -38,41 +38,6 @@ const Cart = ({
     });
   };
 
-  // ✅ Save order to MySQL database
-  const saveOrderToDatabase = async (orderData) => {
-    try {
-      const response = await fetch("https://slicehub-nsef.onrender.com/save-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderData),
-      });
-
-      // Check if response is ok
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new Error("Server returned non-JSON response");
-      }
-
-      const result = await response.json();
-
-      if (result.success) {
-        // toast.success(`Order placed successfully! Order ID: ${result.orderId}`);
-        return result.orderId;
-      } else {
-        toast.error(result.message || "Failed to save order to database");
-        return null;
-      }
-    } catch (error) {
-      console.error("Error saving order:", error);
-      toast.error(`Error: ${error.message}`);
-      return null;
-    }
-  };
-
   const handleUPIPayment = async (e) => {
     e.preventDefault();
 
@@ -119,29 +84,22 @@ const Cart = ({
             const verifyData = await verifyRes.json();
 
             if (verifyData.success) {
-              // ✅ Save order to MySQL database
-              const orderId = await saveOrderToDatabase({
+              // Generate local order ID
+              const orderId = `ORD_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+              // ✅ Show success and close cart
+              onOrderSuccess({
                 customerDetails,
                 cart,
                 totalAmount,
                 paymentData: response,
-                paymentMethod: "online",
+                paymentMethod: "Online Payment - Paid",
+                orderId,
               });
 
-              if (orderId) {
-                // ✅ Show success and close cart
-                onOrderSuccess({
-                  customerDetails,
-                  cart,
-                  totalAmount,
-                  paymentData: response,
-                  paymentMethod: "Online Payment - Paid",
-                  orderId,
-                });
-
-                setCustomerDetails({ name: "", address: "", phone: "", email: "" });
-                onClose();
-              }
+              toast.success(`Order placed successfully! Order ID: ${orderId}`);
+              setCustomerDetails({ name: "", address: "", phone: "", email: "" });
+              onClose();
             } else {
               toast.error("Payment verification failed.");
             }
@@ -187,28 +145,21 @@ const Cart = ({
     setIsProcessing(true);
 
     try {
-      // ✅ Save COD order to MySQL database
-      const orderId = await saveOrderToDatabase({
+      // Generate local order ID
+      const orderId = `ORD_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+      onOrderSuccess({
         customerDetails,
         cart,
         totalAmount,
         paymentData: null,
-        paymentMethod: 'cod',
+        paymentMethod: 'Cash on Delivery',
+        orderId,
       });
 
-      if (orderId) {
-        onOrderSuccess({
-          customerDetails,
-          cart,
-          totalAmount,
-          paymentData: null,
-          paymentMethod: 'Cash on Delivery',
-          orderId,
-        });
-
-        setCustomerDetails({ name: '', address: '', phone: '', email: '' });
-        onClose();
-      }
+      toast.success(`Order placed successfully! Order ID: ${orderId}`);
+      setCustomerDetails({ name: '', address: '', phone: '', email: '' });
+      onClose();
     } catch (error) {
       console.error("COD order error:", error);
       toast.error("Error placing order");
